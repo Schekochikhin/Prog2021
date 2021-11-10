@@ -11,7 +11,7 @@ int tag = 0;
 
 class Handler {
     public:
-        string name;
+        //string name;
         string handlerName;
         vector <float> num;
 
@@ -26,6 +26,7 @@ class Handler {
 
     public:
         void push_back_vector(){
+
             float tmp = 0.0;
             ifstream in("in.txt");
             string str;
@@ -34,7 +35,7 @@ class Handler {
                 
                 for (in >> str; !in.eof(); in >> str){
                     tmp = ::atof(str.c_str());
-                    num.push_back(tmp);
+                    this->num.push_back(tmp);
                 }
             }
             in.close();
@@ -47,15 +48,16 @@ class ErrorHandler : public Handler {
         ErrorHandler(string name) : Handler(name) {}
     public:
         void create(){
-
-            float error = static_cast <float> (rand() % (INT_MAX / 4)) / static_cast <float> (rand() % 10);
+            
             srand(time(0));
+            float error = static_cast <float> (rand() % (INT_MAX / 4)) / static_cast <float> (rand() % 10);
+            
             push_back_vector();
 
             int pos = rand() % (num.size() - 0);
 
             cout << "Error create in " << pos << " position with : " << error << " value" << endl;
-            
+
             ofstream out("out.txt");
 
             if (out.is_open()){
@@ -91,4 +93,21 @@ class AverageHandler : public Handler {
 
             cout << "Avarage value last " << N << " numbers : " << answer << endl; 
         }
+};
+
+class Handler_list {
+    public:
+        int size;
+        vector <Handler> handlerList;
+    public:
+        Handler_list(int length, vector <Handler> list){
+            this->size = length;
+            for (int i = 0; i < length; i++) this->handlerList[i] = list[i];
+        }
+    public:
+        void print(){
+            for (int i = 0; i < this->size; i++){
+                cout << this->handlerList[i].handlerName << " ";
+            }
+        } 
 };
