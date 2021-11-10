@@ -33,7 +33,6 @@ class ErrorHandler : public Handler {
             ifstream in("in.txt");
             srand(time(0));
             float error = static_cast <float> (rand() % (INT_MAX / 4)) / static_cast <float> (rand() % 10);
-            //int i = 0;
             float tmp = 0.0;
             string str;
             vector <float> num;
