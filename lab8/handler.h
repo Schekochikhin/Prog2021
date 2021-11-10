@@ -13,6 +13,7 @@ class Handler {
     public:
         string name;
         string handlerName;
+        vector <float> num;
 
     public:
         Handler() {
@@ -22,6 +23,22 @@ class Handler {
         Handler(string name) {
             this->handlerName = name;
         }
+
+    public:
+        void push_back_vector(){
+            float tmp = 0.0;
+            ifstream in("in.txt");
+            string str;
+
+            if (in.is_open()){
+                
+                for (in >> str; !in.eof(); in >> str){
+                    tmp = ::atof(str.c_str());
+                    num.push_back(tmp);
+                }
+            }
+            in.close();
+        }
 };
 
 class ErrorHandler : public Handler {
@@ -30,38 +47,31 @@ class ErrorHandler : public Handler {
         ErrorHandler(string name) : Handler(name) {}
     public:
         void create(){
-            ifstream in("in.txt");
-            srand(time(0));
-            float error = static_cast <float> (rand() % (INT_MAX / 4)) / static_cast <float> (rand() % 10);
-            float tmp = 0.0;
-            string str;
-            vector <float> num;
 
-            if (in.is_open()){
-                
-                for (in >> str; !in.eof(); in >> str){
-                    tmp = ::atof(str.c_str());
-                    num.push_back(tmp);
-                }
-            }
-            in.close();
+            float error = static_cast <float> (rand() % (INT_MAX / 4)) / static_cast <float> (rand() % 10);
+            srand(time(0));
+            push_back_vector();
+
             int pos = rand() % (num.size() - 0);
+
             cout << "Error create in " << pos << " position with : " << error << " value" << endl;
+            
             ofstream out("out.txt");
 
             if (out.is_open()){
                 
-                for (int i = 0; i < num.size() + 1; i ++){
+                for (int i = 0; i < num.size(); i ++){
                     if (i == pos){
                         out << error << " ";
                     }else{
-                        out << num[i] << " ";                    }
+                        out << num[i] << " ";                    
+                    }
                 }
             }else{
                 cout << "Error with open file OUT" << endl;
             }
             out.close();
-        }   
+        }
 };
 
 class AverageHandler : public Handler {
@@ -70,31 +80,14 @@ class AverageHandler : public Handler {
         AverageHandler(string name) : Handler(name) {}
     public:
         void create(){
-            ifstream in("in.txt");
-            float tmp = 0.0;
-            int i = 0;
+
             float answer = 0.0;
-            string str;
-            vector <float> num;
-            
-            if (in.is_open()){
 
-                for (in >> str; !in.eof(); in >> str){
-                    tmp = ::atof(str.c_str());
-                    num.push_back(tmp);
-                }
+            push_back_vector();
 
-                in >> str;
-                tmp = ::atof(str.c_str());
-                num.push_back(tmp);
-
-                for (int j = num.size() - 1; j > num.size() - N - 1; j--)
-                    answer += num[j];
-                answer = answer / N;
-            }else{
-                cout << "Error with open file IN" << endl;
-            }
-            in.close();
+            for (int i = num.size() - 1; i > num.size() - N - 1; i--)
+                answer += num[i];
+            answer = answer / N;
 
             cout << "Avarage value last " << N << " numbers : " << answer << endl; 
         }
